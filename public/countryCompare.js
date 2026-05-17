@@ -115,6 +115,21 @@ function savedCountryToComparisonCountry(savedCountry) {
   };
 }
 
+function addSavedCountryToComparison(savedCountry) {
+  const comparisonCountry = savedCountryToComparisonCountry(savedCountry);
+
+  if (pageName === "home") {
+    sessionStorage.setItem(
+      "pendingComparisonCountry",
+      JSON.stringify(comparisonCountry),
+    );
+    window.location.href = "/compare";
+    return;
+  }
+
+  addCountry(comparisonCountry);
+}
+
 /*
   Fetch call 1:
   Gets data from an external provider through the backend.
@@ -201,11 +216,17 @@ async function saveCountry(country) {
       body: JSON.stringify(countryToDatabasePayload(country)),
     });
 
-    if (!response.ok) {
-      throw new Error("Country could not be saved.");
+    const result = await response.json();
+
+    if (response.status === 409) {
+      showError(result.message || "This country is already saved.");
+      return;
     }
 
-    await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || "Country could not be saved.");
+    }
+
     showSuccess(`${country.name.common} was saved to the database.`);
     await loadSavedCountries();
   } catch (error) {
@@ -484,19 +505,22 @@ function renderSavedCountries(savedCountries) {
           </div>
         </div>
 
-        ${
-          pageName === "compare"
-            ? `<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
-              <button class="btn btn-outline compare-saved-btn" data-id="${country.id}">
-               Add to Compare
-              </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
+            <button 
+            class="btn btn-outline compare-saved-btn" 
+            data-id="${country.id}"
+          >
+            Add to Compare
+          </button>
 
-              <button class="btn btn-danger delete-saved-btn" data-id="${country.id}">
-                Delete Saved Entry
-              </button>
-           </div>`
-            : ""
-        }
+          ${
+            pageName === 'compare'
+             ? `<button class="btn btn-danger delete-saved-btn" data-id="${country.id}">
+                 Delete Saved Entry
+               </button>`
+              : ''
+         }
+        </div>
       </div>
     `;
 
@@ -642,6 +666,13 @@ function setupComparePage() {
   renderResults([]);
   renderComparison();
   loadSavedCountries();
+
+  const pendingCountry = sessionStorage.getItem("pendingComparisonCountry");
+
+  if (pendingCountry) {
+    addCountry(JSON.parse(pendingCountry));
+    sessionStorage.removeItem("pendingComparisonCountry");
+  }
 
   setTimeout(() => {
     renderChartWithLibrary();
