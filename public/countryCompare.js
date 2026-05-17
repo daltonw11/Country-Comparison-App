@@ -1,18 +1,18 @@
 const pageName = document.body.dataset.page;
 
-const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
-const clearButton = document.getElementById('clearButton');
-const refreshSavedButton = document.getElementById('refreshSavedButton');
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
+const clearButton = document.getElementById("clearButton");
+const refreshSavedButton = document.getElementById("refreshSavedButton");
 
-const resultsContainer = document.getElementById('results');
-const compareContent = document.getElementById('compareContent');
-const savedCountriesContainer = document.getElementById('savedCountries');
+const resultsContainer = document.getElementById("results");
+const compareContent = document.getElementById("compareContent");
+const savedCountriesContainer = document.getElementById("savedCountries");
 
-const errorBox = document.getElementById('errorBox');
-const successBox = document.getElementById('successBox');
-const loadingBox = document.getElementById('loadingBox');
-const homeStatus = document.getElementById('homeStatus');
+const errorBox = document.getElementById("errorBox");
+const successBox = document.getElementById("successBox");
+const loadingBox = document.getElementById("loadingBox");
+const homeStatus = document.getElementById("homeStatus");
 
 let selectedCountries = [];
 let countryChart = null;
@@ -25,7 +25,7 @@ function showMessage(element, message) {
   }
 
   element.textContent = message;
-  element.style.display = 'block';
+  element.style.display = "block";
 }
 
 function hideMessage(element) {
@@ -33,8 +33,8 @@ function hideMessage(element) {
     return;
   }
 
-  element.textContent = '';
-  element.style.display = 'none';
+  element.textContent = "";
+  element.style.display = "none";
 }
 
 function showError(message) {
@@ -54,7 +54,7 @@ function showSuccess(message) {
 }
 
 function showLoading() {
-  showMessage(loadingBox, 'Loading countries...');
+  showMessage(loadingBox, "Loading countries...");
 }
 
 function hideLoading() {
@@ -63,32 +63,55 @@ function hideLoading() {
 
 function formatLanguages(languages) {
   if (!languages) {
-    return 'N/A';
+    return "N/A";
   }
 
-  return Object.values(languages).join(', ');
+  return Object.values(languages).join(", ");
 }
 
 function formatCurrencies(currencies) {
   if (!currencies) {
-    return 'N/A';
+    return "N/A";
   }
 
   return Object.values(currencies)
     .map((currency) => currency.name)
-    .join(', ');
+    .join(", ");
 }
 
 function countryToDatabasePayload(country) {
   return {
-    country_name: country.name?.common || 'Unknown',
-    official_name: country.name?.official || 'Unknown',
-    capital: country.capital?.[0] || 'N/A',
-    region: country.region || 'N/A',
-    subregion: country.subregion || 'N/A',
+    country_name: country.name?.common || "Unknown",
+    official_name: country.name?.official || "Unknown",
+    capital: country.capital?.[0] || "N/A",
+    region: country.region || "N/A",
+    subregion: country.subregion || "N/A",
     population: country.population || 0,
     area: country.area || 0,
-    flag_url: country.flags?.png || ''
+    flag_url: country.flags?.png || "",
+  };
+}
+
+/* converts a saved Supabase row into the same shape as a REST Countries result */
+function savedCountryToComparisonCountry(savedCountry) {
+  return {
+    name: {
+      common: savedCountry.country_name,
+      official: savedCountry.official_name || savedCountry.country_name,
+    },
+    flags: {
+      png: savedCountry.flag_url || "",
+    },
+    capital: savedCountry.capital ? [savedCountry.capital] : [],
+    region: savedCountry.region || "N/A",
+    subregion: savedCountry.subregion || "N/A",
+    population: savedCountry.population || 0,
+    area: savedCountry.area || 0,
+    languages: null,
+    currencies: null,
+    timezones: [],
+    borders: [],
+    latlng: null,
   };
 }
 
@@ -100,7 +123,7 @@ async function searchCountries() {
   const query = searchInput.value.trim();
 
   if (!query) {
-    showError('Please enter a country name.');
+    showError("Please enter a country name.");
     return;
   }
 
@@ -112,7 +135,7 @@ async function searchCountries() {
     const response = await fetch(`/api/countries/${encodeURIComponent(query)}`);
 
     if (!response.ok) {
-      throw new Error('Country search failed.');
+      throw new Error("Country search failed.");
     }
 
     const data = await response.json();
@@ -120,7 +143,7 @@ async function searchCountries() {
   } catch (error) {
     console.error(error);
     renderResults([]);
-    showError('No countries found. Try another search.');
+    showError("No countries found. Try another search.");
   } finally {
     hideLoading();
   }
@@ -136,14 +159,14 @@ async function loadSavedCountries() {
   }
 
   if (homeStatus) {
-    showMessage(homeStatus, 'Loading saved countries...');
+    showMessage(homeStatus, "Loading saved countries...");
   }
 
   try {
-    const response = await fetch('/api/favorites');
+    const response = await fetch("/api/favorites");
 
     if (!response.ok) {
-      throw new Error('Saved countries could not be loaded.');
+      throw new Error("Saved countries could not be loaded.");
     }
 
     const savedCountries = await response.json();
@@ -170,16 +193,16 @@ async function loadSavedCountries() {
 */
 async function saveCountry(country) {
   try {
-    const response = await fetch('/api/favorites', {
-      method: 'POST',
+    const response = await fetch("/api/favorites", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(countryToDatabasePayload(country))
+      body: JSON.stringify(countryToDatabasePayload(country)),
     });
 
     if (!response.ok) {
-      throw new Error('Country could not be saved.');
+      throw new Error("Country could not be saved.");
     }
 
     await response.json();
@@ -187,30 +210,30 @@ async function saveCountry(country) {
     await loadSavedCountries();
   } catch (error) {
     console.error(error);
-    showError('Unable to save this country. Check your Supabase setup.');
+    showError("Unable to save this country. Check your Supabase setup.");
   }
 }
 
 async function deleteSavedCountry(id) {
   try {
     const response = await fetch(`/api/favorites/${id}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
 
     if (!response.ok) {
-      throw new Error('Saved country could not be deleted.');
+      throw new Error("Saved country could not be deleted.");
     }
 
     await loadSavedCountries();
   } catch (error) {
     console.error(error);
-    showError('Unable to delete saved country.');
+    showError("Unable to delete saved country.");
   }
 }
 
 function addCountry(country) {
   const alreadySelected = selectedCountries.some(
-    (selectedCountry) => selectedCountry.name.common === country.name.common
+    (selectedCountry) => selectedCountry.name.common === country.name.common,
   );
 
   if (alreadySelected) {
@@ -218,7 +241,7 @@ function addCountry(country) {
   }
 
   if (selectedCountries.length >= 4) {
-    showError('You can compare up to 4 countries at a time.');
+    showError("You can compare up to 4 countries at a time.");
     return;
   }
 
@@ -232,7 +255,7 @@ function addCountry(country) {
 
 function removeCountry(countryName) {
   selectedCountries = selectedCountries.filter(
-    (country) => country.name.common !== countryName
+    (country) => country.name.common !== countryName,
   );
 
   renderComparison();
@@ -253,7 +276,7 @@ function renderResults(countries) {
     return;
   }
 
-  resultsContainer.innerHTML = '';
+  resultsContainer.innerHTML = "";
 
   if (!countries.length) {
     resultsContainer.innerHTML = `
@@ -266,24 +289,24 @@ function renderResults(countries) {
   }
 
   countries.forEach((country) => {
-    const card = document.createElement('div');
-    card.className = 'card';
+    const card = document.createElement("div");
+    card.className = "card";
 
     card.innerHTML = `
-      <img class="flag" src="${country.flags?.png || ''}" alt="${country.name.common} flag">
+      <img class="flag" src="${country.flags?.png || ""}" alt="${country.name.common} flag">
 
       <div class="card-body">
         <div class="result-header">
           <div>
             <h3>${country.name.common}</h3>
-            <p class="muted">${country.region || 'N/A'}</p>
+            <p class="muted">${country.region || "N/A"}</p>
           </div>
         </div>
 
         <div class="detail-grid">
           <div class="detail-box">
             <strong>Capital</strong>
-            <span>${country.capital?.[0] || 'N/A'}</span>
+            <span>${country.capital?.[0] || "N/A"}</span>
           </div>
 
           <div class="detail-box">
@@ -298,7 +321,7 @@ function renderResults(countries) {
 
           <div class="detail-box">
             <strong>Subregion</strong>
-            <span>${country.subregion || 'N/A'}</span>
+            <span>${country.subregion || "N/A"}</span>
           </div>
         </div>
 
@@ -309,11 +332,11 @@ function renderResults(countries) {
       </div>
     `;
 
-    card.querySelector('.add-btn').addEventListener('click', () => {
+    card.querySelector(".add-btn").addEventListener("click", () => {
       addCountry(country);
     });
 
-    card.querySelector('.save-btn').addEventListener('click', () => {
+    card.querySelector(".save-btn").addEventListener("click", () => {
       saveCountry(country);
     });
 
@@ -342,13 +365,13 @@ function renderComparison() {
         .map(
           (country) => `
             <div class="card">
-              <img class="flag" src="${country.flags?.png || ''}" alt="${country.name.common} flag">
+              <img class="flag" src="${country.flags?.png || ""}" alt="${country.name.common} flag">
 
               <div class="card-body">
                 <div class="result-header">
                   <div>
                     <h3>${country.name.common}</h3>
-                    <p class="muted">${country.capital?.[0] || 'N/A'}</p>
+                    <p class="muted">${country.capital?.[0] || "N/A"}</p>
                   </div>
 
                   <button class="btn btn-outline remove-btn" data-name="${country.name.common}">
@@ -359,7 +382,7 @@ function renderComparison() {
                 <div class="detail-grid">
                   <div class="detail-box">
                     <strong>Region</strong>
-                    <span>${country.region || 'N/A'}</span>
+                    <span>${country.region || "N/A"}</span>
                   </div>
 
                   <div class="detail-box">
@@ -374,7 +397,7 @@ function renderComparison() {
 
                   <div class="detail-box">
                     <strong>Time Zones</strong>
-                    <span>${country.timezones?.join(', ') || 'N/A'}</span>
+                    <span>${country.timezones?.join(", ") || "N/A"}</span>
                   </div>
                 </div>
 
@@ -390,18 +413,18 @@ function renderComparison() {
 
                 <div class="long-detail">
                   <strong>Borders</strong>
-                  <span>${country.borders?.join(', ') || 'None'}</span>
+                  <span>${country.borders?.join(", ") || "None"}</span>
                 </div>
               </div>
             </div>
-          `
+          `,
         )
-        .join('')}
+        .join("")}
     </div>
   `;
 
-  document.querySelectorAll('.remove-btn').forEach((button) => {
-    button.addEventListener('click', () => {
+  document.querySelectorAll(".remove-btn").forEach((button) => {
+    button.addEventListener("click", () => {
       removeCountry(button.dataset.name);
     });
   });
@@ -412,7 +435,7 @@ function renderSavedCountries(savedCountries) {
     return;
   }
 
-  savedCountriesContainer.innerHTML = '';
+  savedCountriesContainer.innerHTML = "";
 
   if (!savedCountries.length) {
     savedCountriesContainer.innerHTML = `
@@ -425,29 +448,29 @@ function renderSavedCountries(savedCountries) {
   }
 
   savedCountries.forEach((country) => {
-    const card = document.createElement('div');
-    card.className = 'card';
+    const card = document.createElement("div");
+    card.className = "card";
 
     card.innerHTML = `
-      ${country.flag_url ? `<img class="flag" src="${country.flag_url}" alt="${country.country_name} flag">` : ''}
+      ${country.flag_url ? `<img class="flag" src="${country.flag_url}" alt="${country.country_name} flag">` : ""}
 
       <div class="card-body">
         <div class="result-header">
           <div>
             <h3>${country.country_name}</h3>
-            <p class="muted">${country.official_name || 'Saved country'}</p>
+            <p class="muted">${country.official_name || "Saved country"}</p>
           </div>
         </div>
 
         <div class="detail-grid">
           <div class="detail-box">
             <strong>Capital</strong>
-            <span>${country.capital || 'N/A'}</span>
+            <span>${country.capital || "N/A"}</span>
           </div>
 
           <div class="detail-box">
             <strong>Region</strong>
-            <span>${country.region || 'N/A'}</span>
+            <span>${country.region || "N/A"}</span>
           </div>
 
           <div class="detail-box">
@@ -462,19 +485,32 @@ function renderSavedCountries(savedCountries) {
         </div>
 
         ${
-          pageName === 'compare'
-            ? `<button class="btn btn-danger delete-saved-btn" data-id="${country.id}" style="margin-top: 16px;">
+          pageName === "compare"
+            ? `<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
+              <button class="btn btn-outline compare-saved-btn" data-id="${country.id}">
+               Add to Compare
+              </button>
+
+              <button class="btn btn-danger delete-saved-btn" data-id="${country.id}">
                 Delete Saved Entry
-              </button>`
-            : ''
+              </button>
+           </div>`
+            : ""
         }
       </div>
     `;
 
-    const deleteButton = card.querySelector('.delete-saved-btn');
+    const compareButton = card.querySelector(".compare-saved-btn");
+    const deleteButton = card.querySelector(".delete-saved-btn");
+
+    if (compareButton) {
+      compareButton.addEventListener("click", () => {
+        addCountry(savedCountryToComparisonCountry(country));
+      });
+    }
 
     if (deleteButton) {
-      deleteButton.addEventListener('click', () => {
+      deleteButton.addEventListener("click", () => {
         deleteSavedCountry(deleteButton.dataset.id);
       });
     }
@@ -488,9 +524,9 @@ function renderSavedCountries(savedCountries) {
   Chart.js chart for selected country population and area.
 */
 function renderChartWithLibrary() {
-  const chartCanvas = document.getElementById('countryChart');
+  const chartCanvas = document.getElementById("countryChart");
 
-  if (!chartCanvas || typeof Chart === 'undefined') {
+  if (!chartCanvas || typeof Chart === "undefined") {
     return;
   }
 
@@ -499,38 +535,39 @@ function renderChartWithLibrary() {
   }
 
   const labels = selectedCountries.map((country) => country.name.common);
-  const populationData = selectedCountries.map((country) => country.population || 0);
-  const areaData = selectedCountries.map((country) => country.area || 0);
+  const populationData = selectedCountries.map(
+    (country) => country.population || 0,
+  );
 
   countryChart = new Chart(chartCanvas, {
-    type: 'bar',
+    type: "bar",
     data: {
       labels,
       datasets: [
         {
-          label: 'Population',
-          data: populationData
+          label: "Population",
+          data: populationData,
         },
-        {
-          label: 'Area km²',
-          data: areaData
-        }
-      ]
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'bottom'
-        }
+          position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Population Comparison",
+        },
       },
       scales: {
         y: {
-          beginAtZero: true
-        }
-      }
-    }
+          beginAtZero: true,
+        },
+      },
+    },
   });
 }
 
@@ -539,17 +576,17 @@ function renderChartWithLibrary() {
   Leaflet map for selected countries.
 */
 function renderMapWithLibrary() {
-  const mapElement = document.getElementById('countryMap');
+  const mapElement = document.getElementById("countryMap");
 
-  if (!mapElement || typeof L === 'undefined') {
+  if (!mapElement || typeof L === "undefined") {
     return;
   }
 
   if (!countryMap) {
-    countryMap = L.map('countryMap').setView([20, 0], 2);
+    countryMap = L.map("countryMap").setView([20, 0], 2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
     }).addTo(countryMap);
   }
 
@@ -566,7 +603,9 @@ function renderMapWithLibrary() {
 
     const marker = L.marker(country.latlng)
       .addTo(countryMap)
-      .bindPopup(`${country.name.common}<br>${country.capital?.[0] || 'No capital listed'}`);
+      .bindPopup(
+        `${country.name.common}<br>${country.capital?.[0] || "No capital listed"}`,
+      );
 
     countryMarkers.push(marker);
   });
@@ -581,23 +620,23 @@ function renderMapWithLibrary() {
 
 function setupComparePage() {
   if (searchButton) {
-    searchButton.addEventListener('click', searchCountries);
+    searchButton.addEventListener("click", searchCountries);
   }
 
   if (searchInput) {
-    searchInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
         searchCountries();
       }
     });
   }
 
   if (clearButton) {
-    clearButton.addEventListener('click', clearSelection);
+    clearButton.addEventListener("click", clearSelection);
   }
 
   if (refreshSavedButton) {
-    refreshSavedButton.addEventListener('click', loadSavedCountries);
+    refreshSavedButton.addEventListener("click", loadSavedCountries);
   }
 
   renderResults([]);
@@ -614,10 +653,10 @@ function setupHomePage() {
   loadSavedCountries();
 }
 
-if (pageName === 'compare') {
+if (pageName === "compare") {
   setupComparePage();
 }
 
-if (pageName === 'home') {
+if (pageName === "home") {
   setupHomePage();
 }
