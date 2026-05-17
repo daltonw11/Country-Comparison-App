@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,6 +52,12 @@ app.get('/api/countries/:name', async (request, response) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Country Compare app is available on port ${port}`);
-});
+module.exports = app;
+
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+
+  app.listen(port, () => {
+    console.log(`Country Compare app is available on port ${port}`);
+  });
+}

@@ -284,9 +284,7 @@ async function searchCountries() {
   showLoading();
 
   try {
-    const response = await fetch(
-  `https://restcountries.com/v3.1/name/${encodeURIComponent(query)}?fields=name,flags,capital,region,subregion,population,area,languages,currencies,timezones,borders`
-);
+    const response = await fetch(`/api/countries/${encodeURIComponent(query)}`);
 
     if (!response.ok) {
       throw new Error('Country search failed.');
