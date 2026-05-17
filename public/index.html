@@ -3,441 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Country Compare Dashboard</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f8fafc;
-      color: #0f172a;
-      line-height: 1.5;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    .container {
-      width: min(1200px, 92%);
-      margin: 0 auto;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.95);
-      border-bottom: 1px solid #e2e8f0;
-      backdrop-filter: blur(8px);
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      background: #0f172a;
-      color: white;
-      font-size: 20px;
-    }
-
-    .brand h1 {
-      font-size: 1.1rem;
-    }
-
-    .brand p {
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-
-    nav {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: #0f172a;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    nav a:hover {
-      color: #475569;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 32px;
-      padding: 56px 0 40px;
-      align-items: center;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #e2e8f0;
-      color: #0f172a;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 0.9rem;
-      margin-bottom: 18px;
-      font-weight: 600;
-    }
-
-    .hero h2 {
-      font-size: clamp(2rem, 4vw, 3.6rem);
-      line-height: 1.1;
-      margin-bottom: 18px;
-    }
-
-    .hero p {
-      font-size: 1.05rem;
-      color: #475569;
-      max-width: 700px;
-    }
-
-    .search-box {
-      margin-top: 24px;
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 24px;
-      padding: 14px;
-      display: flex;
-      gap: 12px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-    }
-
-    .search-box input {
-      flex: 1;
-      height: 48px;
-      border: 1px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 0 14px;
-      font-size: 1rem;
-    }
-
-    .btn {
-      border: none;
-      cursor: pointer;
-      border-radius: 16px;
-      padding: 0 20px;
-      min-height: 48px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .btn-primary {
-      background: #0f172a;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #1e293b;
-    }
-
-    .btn-outline {
-      background: white;
-      color: #0f172a;
-      border: 1px solid #cbd5e1;
-    }
-
-    .btn-outline:hover {
-      background: #f8fafc;
-    }
-
-    .feature-grid,
-    .about-grid,
-    .help-grid,
-    .results-grid,
-    .compare-grid {
-      display: grid;
-      gap: 20px;
-    }
-
-    .feature-grid {
-      grid-template-columns: repeat(3, 1fr);
-      margin-top: 24px;
-    }
-
-    .about-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .help-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .results-grid,
-    .compare-grid {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-
-    .card {
-      background: white;
-      border-radius: 28px;
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
-      overflow: hidden;
-      border: 1px solid #eef2f7;
-    }
-
-    .card-body {
-      padding: 20px;
-    }
-
-    .feature-card,
-    .info-card,
-    .step-card {
-      padding: 22px;
-    }
-
-    .feature-card h3,
-    .info-card h3,
-    .step-card h3,
-    .result-header h3,
-    .section-title {
-      margin-bottom: 8px;
-    }
-
-    .feature-card p,
-    .info-card p,
-    .step-card p,
-    .muted,
-    .panel p {
-      color: #64748b;
-    }
-
-    .hero-panel {
-      background: radial-gradient(circle at top, #dbeafe, white 40%, #e2e8f0 100%);
-      min-height: 360px;
-      border-radius: 32px;
-      padding: 24px;
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
-    }
-
-    .panel {
-      background: rgba(255, 255, 255, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: 26px;
-      padding: 24px;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      backdrop-filter: blur(8px);
-    }
-
-    .panel-grid {
-      margin-top: 24px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .mini-box {
-      background: white;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
-    }
-
-    section {
-      padding: 36px 0;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    .section-title {
-      font-size: 2rem;
-    }
-
-    .status {
-      margin-bottom: 16px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      font-size: 0.95rem;
-      display: none;
-    }
-
-    .status.error {
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-    }
-
-    .status.loading {
-      background: white;
-      color: #475569;
-      border: 1px solid #e2e8f0;
-    }
-
-    .flag {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 14px;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .detail-box {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 12px;
-    }
-
-    .detail-box strong,
-    .long-detail strong {
-      display: block;
-      font-size: 0.9rem;
-      color: #64748b;
-      margin-bottom: 4px;
-    }
-
-    .long-detail {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 12px;
-      margin-top: 12px;
-    }
-
-    .empty-state {
-      background: white;
-      border: 2px dashed #cbd5e1;
-      border-radius: 28px;
-      text-align: center;
-      padding: 48px 20px;
-      color: #64748b;
-    }
-
-    .chart-wrap {
-      background: white;
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
-      border: 1px solid #eef2f7;
-    }
-
-    .chart {
-      display: flex;
-      align-items: flex-end;
-      gap: 18px;
-      min-height: 320px;
-      padding: 24px 8px 8px;
-      overflow-x: auto;
-    }
-
-    .bar-group {
-      flex: 1;
-      min-width: 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
-    .bar {
-      width: 70px;
-      background: linear-gradient(to top, #0f172a, #334155);
-      border-radius: 16px 16px 0 0;
-      min-height: 10px;
-      transition: height 0.3s ease;
-    }
-
-    .bar-value {
-      font-size: 0.88rem;
-      color: #475569;
-      text-align: center;
-    }
-
-    .bar-label {
-      font-weight: 700;
-      text-align: center;
-    }
-
-    footer {
-      text-align: center;
-      color: #64748b;
-      padding: 32px 0 40px;
-    }
-
-    @media (max-width: 960px) {
-      .hero,
-      .feature-grid,
-      .about-grid,
-      .help-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .search-box {
-        flex-direction: column;
-      }
-
-      .detail-grid,
-      .panel-grid {
-        grid-template-columns: 1fr;
-      }
-
-      nav {
-        gap: 12px;
-      }
-
-      .section-title {
-        font-size: 1.65rem;
-      }
-    }
-  </style>
-
+  <link rel="stylesheet" href="styles.css" />
   <script src="countryCompare.js" defer></script>
 </head>
 
-<body>
+<body data-page="home">
   <header>
     <div class="container navbar">
       <div class="brand">
@@ -449,196 +22,99 @@
       </div>
 
       <nav>
-        <a href="#home">Home</a>
-        <a href="#compare">Compare</a>
-        <a href="#about">About</a>
-        <a href="#help">Help</a>
+        <a class="active" href="/">Home</a>
+        <a href="/compare">Compare</a>
+        <a href="/about">About</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section id="home">
-      <div class="container hero">
+    <section class="container hero">
+      <div>
+        <span class="badge">Country Comparison Dashboard</span>
+
+        <h2>Compare countries by population, region, language, currency, and more.</h2>
+
+        <p>
+          Search for countries, save them to a Supabase database, and compare important
+          country indicators using charts and maps.
+        </p>
+
+        <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <a class="btn btn-primary" href="/compare">Start Comparing</a>
+          <a class="btn btn-outline" href="/about">Learn About the Project</a>
+        </div>
+
+        <div class="feature-grid">
+          <div class="card feature-card">
+            <h3>FetchAPI Data Loads</h3>
+            <p>All application data is loaded through backend API routes.</p>
+          </div>
+
+          <div class="card feature-card">
+            <h3>Supabase Storage</h3>
+            <p>Saved country entries are stored in a Supabase database.</p>
+          </div>
+
+          <div class="card feature-card">
+            <h3>Charts and Maps</h3>
+            <p>Chart.js and Leaflet.js add frontend library functionality.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="panel">
+          <div>
+            <p class="muted">Saved Countries</p>
+            <h3 style="font-size: 1.8rem; margin-top: 8px;">Database-backed favorites</h3>
+            <p style="margin-top: 12px;">
+              This homepage retrieves saved countries from the backend, which reads them from Supabase.
+            </p>
+          </div>
+
+          <div class="panel-grid">
+            <div class="mini-box">
+              <p class="muted">Backend</p>
+              <strong>Node.js & Express</strong>
+            </div>
+
+            <div class="mini-box">
+              <p class="muted">Database</p>
+              <strong>Supabase</strong>
+            </div>
+
+            <div class="mini-box">
+              <p class="muted">External API</p>
+              <strong>REST Countries</strong>
+            </div>
+
+            <div class="mini-box">
+              <p class="muted">Libraries</p>
+              <strong>Chart.js + Leaflet</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="section-header">
         <div>
-          <span class="badge">Country Comparison Dashboard</span>
-
-          <h2>Compare countries by population, region, language, currency, and more.</h2>
-
-          <p>
-            Search for countries, add them to your comparison list, and explore side-by-side details
-            using live country data.
-          </p>
-
-          <div class="search-box">
-            <input id="searchInput" type="text" placeholder="Search for a country..." />
-            <button id="searchButton" class="btn btn-primary">Search</button>
-          </div>
-
-          <div class="feature-grid">
-            <div class="card feature-card">
-              <h3>Compare</h3>
-              <p>Population, demographics, and basic country indicators.</p>
-            </div>
-
-            <div class="card feature-card">
-              <h3>Explore</h3>
-              <p>Regions, capitals, borders, and time zones.</p>
-            </div>
-
-            <div class="card feature-card">
-              <h3>Visualize</h3>
-              <p>Quick chart views for selected countries.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-panel">
-          <div class="panel">
-            <div>
-              <p class="muted">Featured</p>
-              <h3 style="font-size: 1.8rem; margin-top: 8px;">Global country explorer</h3>
-              <p style="margin-top: 12px;">
-                A clean dashboard for students, travelers, and researchers who need reliable,
-                comparable country information.
-              </p>
-            </div>
-
-            <div class="panel-grid">
-              <div class="mini-box">
-                <p class="muted">Data source</p>
-                <strong>REST Countries API</strong>
-              </div>
-
-              <div class="mini-box">
-                <p class="muted">Front end</p>
-                <strong>HTML, CSS, JavaScript</strong>
-              </div>
-
-              <div class="mini-box">
-                <p class="muted">Best for</p>
-                <strong>Students & travelers</strong>
-              </div>
-
-              <div class="mini-box">
-                <p class="muted">Backend</p>
-                <strong>Node.js & Express</strong>
-              </div>
-            </div>
-          </div>
+          <h2 class="section-title">Recently Saved Countries</h2>
+          <p class="muted">Loaded from Supabase using the backend endpoint <strong>/api/favorites</strong>.</p>
         </div>
       </div>
-    </section>
 
-    <section>
-      <div class="container">
-        <div id="errorBox" class="status error"></div>
-        <div id="loadingBox" class="status loading">Loading countries...</div>
-
-        <div>
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Search Results</h2>
-              <p class="muted">Add up to 4 countries to compare</p>
-            </div>
-          </div>
-
-          <div id="results" class="results-grid"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="compare">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Comparison Dashboard</h2>
-            <p class="muted">Review country details side by side and compare major indicators.</p>
-          </div>
-
-          <button id="clearButton" class="btn btn-outline">Clear Selection</button>
-        </div>
-
-        <div id="compareContent"></div>
-      </div>
-    </section>
-
-    <section id="about">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">About</h2>
-          </div>
-        </div>
-
-        <div class="about-grid">
-          <div class="card info-card">
-            <h3>Information Problem</h3>
-            <p>
-              Many users need a simple way to compare countries across geographic, demographic,
-              and basic economic-related indicators. Existing resources can be hard to compare
-              side by side.
-            </p>
-          </div>
-
-          <div class="card info-card">
-            <h3>Purpose of the Application</h3>
-            <p>
-              This dashboard helps students, travelers, and researchers search for countries,
-              compare them visually, and review country facts in one place.
-            </p>
-          </div>
-
-          <div class="card info-card">
-            <h3>Data Source</h3>
-            <p>
-              The site uses the REST Countries API to retrieve structured information such as
-              population, region, capital, languages, currencies, borders, and time zones.
-            </p>
-          </div>
-
-          <div class="card info-card">
-            <h3>Limitations</h3>
-            <p>
-              This version focuses on broad country data and does not include deeper economic data
-              such as GDP or inflation unless more APIs are added later.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="help">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Help</h2>
-          </div>
-        </div>
-
-        <div class="help-grid">
-          <div class="card step-card">
-            <h3>Step 1: Search</h3>
-            <p>Type a country name into the search bar and click Search.</p>
-          </div>
-
-          <div class="card step-card">
-            <h3>Step 2: Add</h3>
-            <p>Click Add on any result card to place that country into the comparison section.</p>
-          </div>
-
-          <div class="card step-card">
-            <h3>Step 3: Compare</h3>
-            <p>Review side-by-side details and the population chart for selected countries.</p>
-          </div>
-        </div>
-      </div>
+      <div id="homeStatus" class="status loading">Loading saved countries...</div>
+      <div id="savedCountries" class="saved-grid"></div>
     </section>
   </main>
 
   <footer>
     <div class="container">
-      <p>Country Compare Dashboard • Powered by REST Countries API</p>
+      <p>Country Compare Dashboard • Node.js • Express • Supabase • REST Countries API</p>
     </div>
   </footer>
 </body>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Compare Countries | Country Compare Dashboard</title>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    defer
+  ></script>
+
+  <script src="countryCompare.js" defer></script>
+</head>
+
+<body data-page="compare">
+  <header>
+    <div class="container navbar">
+      <div class="brand">
+        <div class="brand-icon">🌍</div>
+        <div>
+          <h1>Country Compare</h1>
+          <p>Explore countries side by side</p>
+        </div>
+      </div>
+
+      <nav>
+        <a href="/">Home</a>
+        <a class="active" href="/compare">Compare</a>
+        <a href="/about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container page-section">
+      <span class="badge">Project Functionality</span>
+
+      <h2 class="page-title">Search, compare, visualize, and save countries.</h2>
+
+      <p class="page-intro">
+        This page uses backend API routes to retrieve country data, save selected entries
+        to Supabase, and reload saved countries from the database.
+      </p>
+
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Search for a country..." />
+        <button id="searchButton" class="btn btn-primary">Search</button>
+      </div>
+    </section>
+
+    <section class="container">
+      <div id="errorBox" class="status error"></div>
+      <div id="successBox" class="status success"></div>
+      <div id="loadingBox" class="status loading">Loading countries...</div>
+
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Search Results</h2>
+          <p class="muted">Results come from the backend route <strong>/api/countries/:name</strong>.</p>
+        </div>
+      </div>
+
+      <div id="results" class="results-grid"></div>
+    </section>
+
+    <section class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Comparison Dashboard</h2>
+          <p class="muted">Add up to 4 countries to compare details, charts, and location.</p>
+        </div>
+
+        <button id="clearButton" class="btn btn-outline">Clear Selection</button>
+      </div>
+
+      <div id="compareContent"></div>
+
+      <div class="visual-grid">
+        <div class="chart-wrap">
+          <h3>Population and Area Chart</h3>
+          <p class="muted">Built with Chart.js.</p>
+          <div class="chart-canvas-wrap">
+            <canvas id="countryChart"></canvas>
+          </div>
+        </div>
+
+        <div class="map-wrap">
+          <h3>Selected Country Map</h3>
+          <p class="muted">Built with Leaflet.js.</p>
+          <div id="countryMap"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Saved Countries</h2>
+          <p class="muted">Loaded from Supabase using <strong>/api/favorites</strong>.</p>
+        </div>
+
+        <button id="refreshSavedButton" class="btn btn-outline">Refresh Saved Countries</button>
+      </div>
+
+      <div id="savedCountries" class="saved-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Country Compare Dashboard • Compare</p>
+    </div>
+  </footer>
+</body>
+</html>
