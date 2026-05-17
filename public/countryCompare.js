@@ -514,12 +514,12 @@ function renderSavedCountries(savedCountries) {
           </button>
 
           ${
-            pageName === 'compare'
-             ? `<button class="btn btn-danger delete-saved-btn" data-id="${country.id}">
+            pageName === "compare"
+              ? `<button class="btn btn-danger delete-saved-btn" data-id="${country.id}">
                  Delete Saved Entry
                </button>`
-              : ''
-         }
+              : ""
+          }
         </div>
       </div>
     `;
@@ -529,7 +529,7 @@ function renderSavedCountries(savedCountries) {
 
     if (compareButton) {
       compareButton.addEventListener("click", () => {
-        addCountry(savedCountryToComparisonCountry(country));
+        addSavedCountryToComparison(country);
       });
     }
 
