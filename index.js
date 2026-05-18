@@ -192,7 +192,7 @@ app.post("/api/favorites", async (request, response) => {
 });
 
 /*
-  Optional useful endpoint:
+  API endpoint 4:
   Deletes a saved country from Supabase.
 */
 app.delete("/api/favorites/:id", async (request, response) => {

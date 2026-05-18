@@ -14,10 +14,8 @@
     <header>
       <div class="container navbar">
         <div class="brand">
-          <div class="brand-icon">🌍</div>
           <div>
-            <h1>Country Compare</h1>
-            <p>Explore countries side by side</p>
+            <h1>Country Comparison App - Dalton Willis</h1>
           </div>
         </div>
 
@@ -32,8 +30,6 @@
     <main>
       <section class="container hero">
         <div>
-          <span class="badge">Country Comparison Dashboard</span>
-
           <h2>
             Compare countries by population, region, language, currency, and
             more.
@@ -48,58 +44,49 @@
             <a class="btn btn-primary" href="/compare">Start Comparing</a>
             <a class="btn btn-outline" href="/about">Learn About the Project</a>
           </div>
-
-          <div class="feature-grid">
-            <div class="card feature-card">
-              <h3>FetchAPI Data Loads</h3>
-              <p>All application data is loaded through backend API routes.</p>
-            </div>
-
-            <div class="card feature-card">
-              <h3>Supabase Storage</h3>
-              <p>Saved country entries are stored in a Supabase database.</p>
-            </div>
-
-            <div class="card feature-card">
-              <h3>Charts and Maps</h3>
-              <p>Chart.js and Leaflet.js add frontend library functionality.</p>
-            </div>
-          </div>
         </div>
 
-        <div class="hero-panel">
-          <div class="panel">
-            <div>
-              <p class="muted">Overview</p>
-              <h3 style="font-size: 1.8rem; margin-top: 8px">
-                Built With Modern Web Tools
-              </h3>
-              <p style="margin-top: 12px">
-                This homepage retrieves saved countries from the backend, which
-                reads them from Supabase.
-              </p>
+        <div class="panel">
+          <div>
+            <h3 class="panel-title">Built With Modern Web Tools</h3>
+
+            <div class="feature-grid">
+              <div class="card feature-card">
+                <h3>API Routes</h3>
+                <p>Country data loads through the backend.</p>
+              </div>
+
+              <div class="card feature-card">
+                <h3>Supabase</h3>
+                <p>Saved countries persist in the database.</p>
+              </div>
+
+              <div class="card feature-card">
+                <h3>Charts and Maps</h3>
+                <p>Chart.js and Leaflet power the visuals.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-grid">
+            <div class="mini-box">
+              <p class="muted">Backend</p>
+              <strong>Node.js & Express</strong>
             </div>
 
-            <div class="panel-grid">
-              <div class="mini-box">
-                <p class="muted">Backend</p>
-                <strong>Node.js & Express</strong>
-              </div>
+            <div class="mini-box">
+              <p class="muted">Database</p>
+              <strong>Supabase</strong>
+            </div>
 
-              <div class="mini-box">
-                <p class="muted">Database</p>
-                <strong>Supabase</strong>
-              </div>
+            <div class="mini-box">
+              <p class="muted">External API</p>
+              <strong>REST Countries</strong>
+            </div>
 
-              <div class="mini-box">
-                <p class="muted">External API</p>
-                <strong>REST Countries</strong>
-              </div>
-
-              <div class="mini-box">
-                <p class="muted">Libraries</p>
-                <strong>Chart.js + Leaflet</strong>
-              </div>
+            <div class="mini-box">
+              <p class="muted">Libraries</p>
+              <strong>Chart.js + Leaflet</strong>
             </div>
           </div>
         </div>
@@ -122,14 +109,5 @@
         <div id="savedCountries" class="saved-grid"></div>
       </section>
     </main>
-
-    <footer>
-      <div class="container">
-        <p>
-          Country Compare Dashboard • Node.js • Express • Supabase • REST
-          Countries API
-        </p>
-      </div>
-    </footer>
   </body>
 </html>
